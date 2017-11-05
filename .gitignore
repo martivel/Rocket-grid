@@ -1,6 +1,4 @@
 node_modules/
-dist/
+build/
 .idea/
-dev/reports/
 npm-debug.log
-docs/sass

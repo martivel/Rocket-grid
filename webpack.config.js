@@ -1,88 +1,55 @@
-const webpack = require('webpack')
-const path = require('path')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
-const extractCSS = new ExtractTextPlugin('assets/styles/[name].bundle.css')
-const postCSSOptions = require('./postcss.config.js')
+const path = require('path');
+const webpack = require('webpack');
+const autoprefixer = require('autoprefixer');
 
-const extractCommons = new webpack.optimize.CommonsChunkPlugin({
-  name: 'commons',
-  filename: 'assets/js/commons.js'
-})
+var debug = process.env.NODE_ENV !== "production";
 
-const config = {
-  context: path.resolve(__dirname, 'src'),
-  entry: {
-    index: './index.js'
-  },
+module.exports = {
+  entry: './src/index.js',
+  devtool: debug ? "inline-sourcemap" : false,
+
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'assets/js/[name].bundle.js'
+    path: __dirname,
+    filename: 'build/js/main.min.js'
   },
+
   module: {
-    rules: [
-      {
+    loaders: [{
         test: /\.js$/,
-        include: path.resolve(__dirname, 'src'),
+        loader: 'babel-loader',
+        exclude: /node_modules/
+      },
+      {
+        test: /\.s[ac]ss$/,
         use: [{
-          loader: 'babel-loader',
-          options: {
-            presets: [
-              ['es2015', { modules: false }]
-            ]
-          }
+          loader: "style-loader" // creates style nodes from JS strings
+        }, {
+          loader: "css-loader" // translates CSS into CommonJS
+        }, {
+          loader: "sass-loader" // compiles Sass to CSS
         }]
-      },
-      {
-        test: /\.scss$/,
-        loader: extractCSS.extract([
-          {
-            loader: 'css-loader'
-          },
-          {
-            loader: 'postcss-loader',
-            options: postCSSOptions
-          },
-          {
-            loader: 'sass-loader'
-          }
-        ])
-      },
-
-      {
-        test: /\.(png|jpg)$/,
-        use: [{
-          loader: 'file-loader?name=assets/images/[name].[ext]'
-        }]
-      },
-      {
-        test: /(^-partial)?\.html$/,
-        use: [
-          {
-            loader: 'file-loader',
-            options: {
-              name: '[name].[ext]'
-            }
-          },
-          {
-            loader: 'extract-loader'
-          },
-          {
-            loader: 'html-loader',
-            options: {
-              interpolate: true,
-              attrs: ['img:src']
-            }
-          }
-        ]
       }
-
     ]
   },
-  plugins: [
-    new webpack.NamedModulesPlugin(),
-    extractCSS,
-    extractCommons
-  ]
-}
 
-module.exports = config
+  plugins: debug ? [] : [
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.MinChunkSizePlugin({
+      minChunkSize: 10000
+    }),
+    new webpack.optimize.UglifyJsPlugin({
+      mangle: false,
+      sourcemap: false,
+      compress: {
+        warnings: false,
+        screw_ie8: true
+      }
+    })
+  ],
+
+  stats: {
+    // Colored output
+    colors: true
+  },
+};
