@@ -1,23 +1,37 @@
 {
-  "name": "Rocket-Grid",
-  "version": "1.0.0",
-  "description": "Rocked powered CSS Grid Framework",
-  "main": "webpack.config.js",
-  "scripts": {
-    "start": "webpack-dev-server --port 3000 --hot --inline --open",
-    "bundle": "webpack -p"
+  "private": true,
+  "engines": {
+    "node": ">=0.12.0"
   },
-  "license": "MIT",
+  "browserify": {
+    "transform": [ "babelify" ]
+  },
+  "scripts": {
+    "start": "gulp start --silent",
+    "postinstall": "gulp start --silent"
+  },
   "devDependencies": {
-    "autoprefixer": "*",
-    "babel-core": "*",
-    "babel-loader": "*",
-    "css-loader": "*",
-    "node-sass": "*",
-    "postcss-loader": "*",
-    "sass-loader": "*",
-    "style-loader": "*",
-    "webpack": "*",
-    "webpack-dev-server": "*"
+    "autoprefixer-core": "^5.1.7",
+    "babelify": "^7.2.0",
+    "babel-preset-es2015": "^6.1.18",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.2.0",
+    "browserify": "^12.0.1",
+    "browser-sync": "^2.2.1",
+    "del": "^2.1.0",
+    "gulp": "^3.8.11",
+    "gulp-concat": "^2.6.0",
+    "gulp-cssnano": "^2.0.0",
+    "gulp-imagemin": "^2.4.0",
+    "gulp-jshint": "~1.9.2",
+    "gulp-postcss": "^4.0.3",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.1.0",
+    "gulp-size": "^1.2.1",
+    "gulp-uglify": "^1.5.1",
+    "gulp-uncss": "^1.0.4",
+    "jshint-stylish": "^2.1.0",
+    "normalize.css": "^3.0.3",
+    "should": "^7.1.1",
+    "through2": "^2.0.0"
   }
 }
